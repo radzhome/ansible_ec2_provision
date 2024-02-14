@@ -3,6 +3,8 @@
 Simplified ec2 provisioning. 
 Used to provision new amazon EC2 instances for personal use and testing
 
+# TODO: Provision dokuwiki
+
 ## Usage
 
 Install

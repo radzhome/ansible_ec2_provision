@@ -8,7 +8,8 @@
 - name: Copy php-fpm-pool.conf to /etc/php/7.0/fpm/pool.d/your_user.conf
   copy:
     src: "files/php-fpm-pool.conf"
-    dest: "/etc/php/7.0/fpm/pool.d/your_user.conf"
+    dest: "/etc/php/8.1/fpm/pool.d/your_user.conf"
 
-- name: service php-fpm
-  action: service name=php-fpm state=started
+# No more service?
+#- name: service php-fpm
+#  action: service name=php-fpm state=restarted

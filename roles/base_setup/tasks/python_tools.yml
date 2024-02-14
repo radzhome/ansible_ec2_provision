@@ -1,18 +1,10 @@
 ---
-##
-# This is a python packages
-##
-
-- name: install python-dev and tools packages
-  action: apt name=python-dev state=present
+- name: install py libraries
+  apt: name={{ item }} state=present
   with_items:
-    - python-pip
+    - python3-pip
     - build-essential
-    - openssh-server
-    - python-imaging
   run_once: true
-  notify:
-    - pip upgmcrade setuptools
 
 
 - name: install certbot-nginx

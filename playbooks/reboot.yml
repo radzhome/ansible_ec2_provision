@@ -1,5 +1,4 @@
 ---
-# file: reboot.yml
 - name: Reboot server
   hosts: appservers
   sudo: yes  
