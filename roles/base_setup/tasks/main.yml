@@ -1,0 +1,6 @@
+---
+- include_tasks: dirs.yml
+- include_tasks: utils.yml
+- include_tasks: nginx.yml
+- include_tasks: php_fpm.yml
+- include_tasks: python_tools.yml

@@ -1,0 +1,27 @@
+---
+- name: create new ec2 instance
+  ec2_instance:
+    name: "{{ aws_defaults.name }}"
+    region: "{{ aws_defaults.aws_region }}"
+#    availability_zone: "{{ aws_defaults.aws_zone }}"  # this or vpc subnet id
+    key_name: "{{ aws_defaults.aws_key_pair }}"
+    security_group: "{{ aws_defaults.security_group }}"
+    instance_type: "{{ aws_defaults.instance_type }}"
+    image_id: "{{ aws_defaults.ami_id }}"
+    vpc_subnet_id: "{{ aws_defaults.vpc_subnet_id }}"
+    count: 1
+    wait: yes
+    tags:
+      Environment: "app"
+  register: ec2_info
+
+- name: Display EC2 instance information
+  debug:
+    var: ec2_info.instances
+
+#Using ec2_info.instances[0].public_ip_address
+- name: Add new instance to ec2hosts group memory inventory
+  add_host:
+    hostname: "{{ ec2_info.instances[0].public_ip_address }}"
+    groupname: ec2hosts
+    ansible_host: "{{ ec2_info.instances[0].instance_id }}"

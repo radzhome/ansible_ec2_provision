@@ -1,0 +1,13 @@
+# AMI Search: https://cloud-images.ubuntu.com/locator/ec2/
+aws_defaults:  # this is a dict of dicts
+  aws_region: us-east-1   # eu-west-1
+  ami_id: ami-07d9b9ddc6cd8dd30  # Ubuntu 14.04 HVM
+  instance_type: t2.nano
+  aws_key_pair: deli-cms
+  security_group: launch-wizard-1
+  aws_zone: us-east-1a
+  name: "app_server2"
+  vpc_subnet_id: subnet-eee16e8b
+
+# user used by ansible to connect to instance (default is ec2-user aws linux, ubuntu for ubuntu)
+ansible_ssh_user: ubuntu

@@ -1,0 +1,17 @@
+---
+- hosts: appservers
+  gather_facts: True
+  user: ubuntu
+  sudo: True
+  tasks:
+
+    # fetch instance data from the metadata servers in ec2
+    - name: Gather facts
+      action: ec2_facts
+
+    - name: Conditional
+      action: debug msg="This instance is a {{ ansible_ec2_instance_type }}, id {{ ansible_ec2_instance_id }}"
+      when: ansible_ec2_instance_type == "t2.nano"
+
+    # just show the instance-id
+    #- debug: msg= "{{ hostvars[inventory_hostname]['ansible_ec2_instance_id'] }}"

@@ -1,0 +1,16 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - ec2_creation
+
+
+- hosts: ec2hosts  # dynamically created in ec2_creation - create instance
+  gather_facts: false
+  remote_user: ubuntu
+  become: true  # Enable privilege escalation
+  become_user: root
+  roles:
+    - base_setup

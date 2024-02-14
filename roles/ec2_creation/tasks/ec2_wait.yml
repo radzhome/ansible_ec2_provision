@@ -1,0 +1,8 @@
+---
+- name: wait for instance to listen on port 22
+  wait_for:
+    state: started
+    host: "{{ ec2_info.instances[0].public_ip_address }}"
+    port: 22
+    delay: 2 # wait before checking if listening
+    timeout: 240

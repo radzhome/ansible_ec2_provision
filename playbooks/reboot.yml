@@ -1,0 +1,9 @@
+---
+# file: reboot.yml
+- name: Reboot server
+  hosts: appservers
+  sudo: yes  
+
+  tasks:
+    - name: reboot
+      shell: reboot

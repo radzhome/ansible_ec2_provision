@@ -1,0 +1,8 @@
+---
+- hosts: appservers
+  gather_facts: false
+  remote_user: ubuntu
+  become: true
+  become_user: root
+  roles:
+    - base_setup

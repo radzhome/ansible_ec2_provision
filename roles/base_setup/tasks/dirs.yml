@@ -1,0 +1,15 @@
+---
+- name: Create /var/web directory
+  file:
+    path: /var/web
+    state: directory
+
+- name: Create subdirectories inside /var/web
+  file:
+    path: "/var/web/{{ item }}"
+    state: directory
+  loop:
+    - dokuwiki
+    - supersausage
+    - wojciklaw
+    - sandrako

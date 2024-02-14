@@ -1,0 +1,4 @@
+---
+- name: output ec2 instance information
+  debug:
+    msg: "{{ ec2_info }}"

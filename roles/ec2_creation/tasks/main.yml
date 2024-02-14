@@ -1,0 +1,4 @@
+---
+- include_tasks: create_instance.yml
+- include_tasks: ec2_wait.yml
+- include_tasks: output_ec2_facts.yml
