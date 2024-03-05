@@ -1,0 +1,32 @@
+---
+- name: update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install necessary packages
+  apt:
+    name: ['nginx', 'php-fpm', 'php-xml', 'php-gd', 'tar']
+    state: present
+
+- name: download DokuWiki
+  get_url:
+    url: https://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz
+    dest: /tmp/dokuwiki.tgz
+
+- name: extract DokuWiki archive
+  unarchive:
+    src: /tmp/dokuwiki.tgz
+    dest: /var/web/
+    remote_src: yes
+
+- name: change ownership of DokuWiki files
+  file:
+    path: /var/web/dokuwiki
+    owner: ubuntu
+    group: ubuntu
+    recurse: yes
+
+- name: restart Nginx
+  service:
+    name: nginx
+    state: restarted

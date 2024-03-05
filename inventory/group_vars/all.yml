@@ -1,7 +1,8 @@
 # AMI Search: https://cloud-images.ubuntu.com/locator/ec2/
+# Latest versions: https://console.aws.amazon.com/ec2/
 aws_defaults:  # this is a dict of dicts
   aws_region: us-east-1   # eu-west-1
-  ami_id: ami-07d9b9ddc6cd8dd30  # Ubuntu 14.04 HVM
+  ami_id: ami-0f5daaa3a7fb3378b #  Ubuntu LTS 22.04 # ami-07d9b9ddc6cd8dd30  # Ubuntu 14.04 HVM
   instance_type: t2.nano
   aws_key_pair: deli-cms
   security_group: launch-wizard-1

@@ -9,5 +9,7 @@
 
 - name: install certbot-nginx
   pip:
-    name: certbot-nginx
+    name:
+      - certbot-nginx
+      - virtualenv
     executable: pip3
