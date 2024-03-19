@@ -10,6 +10,35 @@
 - name: install certbot-nginx
   pip:
     name:
+      - certbot
       - certbot-nginx
+      - python3-certbot-nginx
       - virtualenv
     executable: pip3
+
+- name: get certificate directories
+  set_fact:
+    cert_dirs: "{{ lookup('fileglob', '/etc/letsencrypt/live/*/') }}"
+
+- name: configure Certbot with existing certificates
+  command: >
+    certbot --nginx certonly
+    --cert-name {{ item.cert_name }}
+    --cert-path {{ item.cert_path }}/fullchain.pem
+    --key-path {{ item.cert_path }}/privkey.pem
+  loop: "{{ cert_dirs }}"
+  loop_control:
+    loop_var: item
+
+- name: set up cron job for certificate renewal
+  cron:
+    name: "Renew Let's Encrypt SSL Certificates"
+    minute: "0"
+    hour: "0"
+    day: "*/2"  # Run every other day
+    job: "/usr/bin/certbot renew --quiet"
+
+- name: restart Nginx to apply changes
+  service:
+    name: nginx
+    state: restarted
