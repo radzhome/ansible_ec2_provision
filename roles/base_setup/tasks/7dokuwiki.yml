@@ -13,11 +13,17 @@
     url: https://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz
     dest: /tmp/dokuwiki.tgz
 
+#- name: extract DokuWiki archive
+#  unarchive:
+#    src: /tmp/dokuwiki.tgz
+#    dest: /var/web/
+#    remote_src: yes
 - name: extract DokuWiki archive
   unarchive:
     src: /tmp/dokuwiki.tgz
-    dest: /var/web/
+    dest: /var/web/dokuwiki/
     remote_src: yes
+    extra_opts: [--strip-components=1]
 
 - name: change ownership of DokuWiki files
   file:
@@ -25,6 +31,11 @@
     owner: ubuntu
     group: ubuntu
     recurse: yes
+
+- name: copy dokuwiki nginx conf
+  copy:
+    src: "files/dokuwiki.conf"
+    dest: "/etc/nginx/conf.d/dokuwiki.conf"
 
 - name: restart Nginx
   service:

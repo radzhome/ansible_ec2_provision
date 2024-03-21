@@ -1,0 +1,19 @@
+---
+- name: define list of nginx conf files
+  set_fact:
+    nginx_conf_files:
+      - infinite-auto.conf
+      - sandrako.conf
+      - ssausage.conf
+      - wojciklaw.conf
+
+- name: copy nginx conf files
+  copy:
+    src: "files/{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item }}"
+  loop: "{{ nginx_conf_files }}"
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted

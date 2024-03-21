@@ -5,7 +5,6 @@
     name:
       - certbot
       - certbot-nginx
-      - python3-certbot-nginx
       - virtualenv
     executable: pip3
 

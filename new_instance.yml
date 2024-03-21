@@ -4,10 +4,3 @@
   gather_facts: false
   roles:
     - ec2_creation
-
-#- hosts: appservers
-#  gather_facts: True
-#  user: ubuntu
-#  sudo: True
-#  roles:
-#    - base_setup

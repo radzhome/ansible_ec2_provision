@@ -20,8 +20,9 @@
     var: ec2_info.instances
 
 #Using ec2_info.instances[0].public_ip_address
-- name: Add new instance to ec2hosts group memory inventory
+- name: add new instance to ec2hosts group memory inventory
   add_host:
+    # hostname could be "{{ ec2_info.instances[0].instance_id }}" ?
     hostname: "{{ ec2_info.instances[0].public_ip_address }}"
     groupname: ec2hosts
-    ansible_host: "{{ ec2_info.instances[0].instance_id }}"
+    ansible_host: "{{ ec2_info.instances[0].public_ip_address }}"

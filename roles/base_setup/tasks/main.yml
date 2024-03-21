@@ -4,4 +4,5 @@
 - include_tasks: 3nginx.yml
 - include_tasks: 4php_fpm.yml
 - include_tasks: 5python_tools.yml
-- include_tasks: 6dokuwiki.yml
+- include_tasks: 6certbot.yml
+- include_tasks: 7dokuwiki.yml

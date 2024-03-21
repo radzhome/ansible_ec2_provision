@@ -2,7 +2,12 @@
 # install base utils packages
 ##
 ---
-- name: Install utils packages
+- name: update package index
+  apt:
+    update_cache: yes
+  become: true
+
+- name: install utils packages
   apt: pkg=ntp state=present update-cache=yes
   with_items:
     - htop
@@ -11,6 +16,7 @@
     - ntp
     - dig
     - nslookup
+    - git
   tags:
     - packages
 

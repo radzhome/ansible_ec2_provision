@@ -5,3 +5,9 @@
     - python3-pip
     - build-essential
   run_once: true
+
+- name: install python2 for old sites
+  apt:
+    name: python2
+    state: present
+    update_cache: yes

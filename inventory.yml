@@ -1,5 +1,5 @@
 appservers:
   hosts:
     appserver1:
-      ansible_host: 100.27.16.76
+      ansible_host: 44.203.228.109
       ansible_user: ubuntu
