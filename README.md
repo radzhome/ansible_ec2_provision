@@ -1,6 +1,6 @@
 # ansible-ec2-provision
 
-Simplified ec2 provisioning. 
+simple ec2 server provision 
 Used to provision new amazon EC2 instances for personal use and testing
 
 ## Usage
@@ -41,7 +41,7 @@ Create a new instance only:
 ansible-playbook -i inventory/local new_instance.yml -vvv
 ```
 
-## Notes
+## Migration notes (optional)
 
 Moving existing things like /var/web, /etc/letsencrypt zip i.e.
 ```commandline

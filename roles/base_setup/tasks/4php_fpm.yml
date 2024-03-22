@@ -5,11 +5,15 @@
 - name: install php-fpm
   action: apt name=php-fpm state=present
 
-- name: Copy php-fpm-pool.conf to /etc/php/7.0/fpm/pool.d/your_user.conf
+# https://github.com/dokuwiki/dokuwiki/issues/3955
+# see ?do=check, mb_string extension is available and will be used (should be present)
+- name: install php-mbstring to make search fast
+  action: apt name=php-mbstring state=present
+
+- name: Copy php-fpm-pool.conf to /etc/php/7.0/fpm/pool.d/ubuntu.conf
   copy:
     src: "files/php-fpm-pool.conf"
-    dest: "/etc/php/8.1/fpm/pool.d/your_user.conf"
+    dest: "/etc/php/8.1/fpm/pool.d/ubuntu.conf"
 
-# No more service?
-#- name: service php-fpm
-#  action: service name=php-fpm state=restarted
+- name: service php8.1-fpm
+  action: service name=php-fpm state=restarted
