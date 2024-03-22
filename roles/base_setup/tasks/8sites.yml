@@ -1,4 +1,16 @@
 ---
+- name: clone html repositories
+  git:
+    repo: "{{ item.repo }}"
+    dest: "/var/web/{{ item.name }}"
+    update: no
+  loop:
+    - { repo: "https://github.com/radzhome/infinite_auto.git", name: "infinite_auto" }
+    - { repo: "https://github.com/radzhome/sandrako.git", name: "sandrako" }
+    - { repo: "https://github.com/radzhome/wojciklaw.ca.git", name: "wojciklaw.ca" }
+    - { repo: "https://github.com/radzhome/email_service.git", name: "email_service" }
+  when: not ansible_check_mode and not is_directory|default(false)
+
 - name: define list of nginx conf files
   set_fact:
     nginx_conf_files:
@@ -7,11 +19,23 @@
       - ssausage.conf
       - wojciklaw.conf
 
+- name: define list of systemd conf files
+  set_fact:
+    systemd_conf_files:
+      - ssausage.service
+
 - name: copy nginx conf files
   copy:
     src: "files/{{ item }}"
     dest: "/etc/nginx/conf.d/{{ item }}"
   loop: "{{ nginx_conf_files }}"
+
+# Not starting/restarting the service here
+- name: copy systemd service file(s)
+  copy:
+    src: "files/{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item }}"
+  loop: "{{ systemd_conf_files }}"
 
 - name: restart nginx
   service:

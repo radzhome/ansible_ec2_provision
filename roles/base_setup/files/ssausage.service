@@ -1,0 +1,14 @@
+[Unit]
+Description=systemd sh service
+After=multi-user.target
+
+[Service]
+Type=idle
+User=ubuntu
+ExecStart=/var/web/supersausage/deli_cms/service.sh
+Restart=always
+TimeoutStartSec=10
+RestartSec=10
+
+[Install]
+WantedBy=default.target

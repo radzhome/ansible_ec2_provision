@@ -1,13 +1,73 @@
 ---
-- name: install py libraries
-  apt: name={{ item }} state=present
-  with_items:
-    - python3-pip
-    - build-essential
-  run_once: true
-
 - name: install python2 for old sites
   apt:
     name: python2
     state: present
     update_cache: yes
+
+- name: download get-pip.py for Python 2
+  become: true
+  get_url:
+    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: install pip for Python 2
+  become: true
+  command: "python2 /tmp/get-pip.py"
+
+# For some reason pip3 keeps breaking (uninstall + reinstall works)
+- name: uninstall python3-pip
+  become: true
+  apt:
+    name: python3-pip
+    state: absent
+
+- name: reinstall python3-pip
+  become: true
+  apt:
+    name: python3-pip
+    state: present
+
+- name: install py libraries
+  apt: name={{ item }} state=present
+  with_items:
+#    - python3-pip  # Can't have both pip2 and pip3 looks like
+#    - virtualenv
+#    - python-pip  # Py2 pip for virtualenv old sites - use: sudo python2 get-pip.py
+    - build-essential
+  register: install_result
+#  run_once: true
+
+
+#- debug:
+#    var: install_result
+#
+#- name: ensure python3-pip is installed
+#  fail:
+#    msg: "python3-pip is not installed. Please check repository configuration and network connectivity."
+#  when: "'python3-pip' not in install_result.results | map(attribute='item') | map(attribute='name') | list"
+
+# deps for PIL
+# sudo apt-get install libjpeg-dev zlib1g-dev
+- name: install pil dep libraries
+  apt: name={{ item }} state=present
+  with_items:
+    - libjpeg-dev
+    - zlib1g-dev
+  run_once: true
+
+
+# Python3 virtualenv for later
+#- name: install py libs
+#  pip:
+#    name:
+#      - python-pip  # Py2 pip for virtualenv old sites
+#      #- python3-pip
+#      #- virtualenv
+#    executable: pip3
+
+- name: install py libs py2
+  pip:
+    name:
+      - virtualenv
+    executable: pip2

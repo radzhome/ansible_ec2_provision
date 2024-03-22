@@ -3,7 +3,7 @@
   apt:
     update_cache: yes
 
-- name: Install necessary packages
+- name: install necessary packages
   apt:
     name: ['nginx', 'php-fpm', 'php-xml', 'php-gd', 'tar']
     state: present

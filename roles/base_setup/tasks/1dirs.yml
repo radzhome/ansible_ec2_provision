@@ -3,11 +3,22 @@
   file:
     path: /var/web
     state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Create /var/log directory
+  file:
+    path: /var/log
+    state: directory
+    owner: ubuntu
+    group: ubuntu
 
 - name: Create subdirectories inside /var/web
   file:
     path: "/var/web/{{ item }}"
     state: directory
+    owner: ubuntu
+    group: ubuntu
   loop:
     - dokuwiki
     - supersausage

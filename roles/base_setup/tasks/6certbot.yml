@@ -1,5 +1,5 @@
 ---
-
+# https://www.digitalocean.com/community/tutorials/how-to-use-certbot-standalone-mode-to-retrieve-let-s-encrypt-ssl-certificates-on-ubuntu-22-04#step-4-handling-certbot-automatic-renewals
 - name: install certbot-nginx
   pip:
     name:

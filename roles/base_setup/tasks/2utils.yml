@@ -12,6 +12,7 @@
   with_items:
     - htop
     - wget
+    - curl
     - top
     - ntp
     - dig
