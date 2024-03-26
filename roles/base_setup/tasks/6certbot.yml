@@ -1,5 +1,7 @@
 ---
 # https://www.digitalocean.com/community/tutorials/how-to-use-certbot-standalone-mode-to-retrieve-let-s-encrypt-ssl-certificates-on-ubuntu-22-04#step-4-handling-certbot-automatic-renewals
+# On debian: error: externally-managed-environment\n\n× This environment is externally managed\
+# Would have to use aptto install certbot and certbot-nginx etc..
 - name: install certbot-nginx
   pip:
     name:
@@ -9,28 +11,53 @@
     executable: pip3
 
 - name: get certificate directories
-  set_fact:
-    cert_dirs: "{{ lookup('fileglob', '/etc/letsencrypt/live/*/') }}"
+  find:
+    paths: /etc/letsencrypt/live
+    file_type: directory
+  register: cert_dirs
 
+- debug:
+    var: cert_dirs.files
+
+# basename extracts the last part of the path (the domain name)
+# i.e.
+# certbot --nginx certonly --cert-name sandrako.ca  --cert-path /etc/letsencrypt/live/sandrako.ca/fullchain.pem --key-path /etc/letsencrypt/live/sandrako.ca/privkey.pem
+#- name: configure certbot with existing certificates
+#  become: true
+#  expect:
+#    command: >
+#      certbot --nginx certonly
+#      --cert-name {{ item.path | basename }}
+#      --cert-path {{ item.path }}/fullchain.pem
+#      --key-path {{ item.path }}/privkey.pem
+#    responses:
+#      "(U)pdate key type/(K)eep existing key type": "K\n"  # Provide the response to the question
+#      "1: Keep the existing certificate for now": "1\n"      # Response to the second question
+#  loop: "{{ cert_dirs.files }}"
+#  loop_control:
+#    loop_var: item
 - name: configure certbot with existing certificates
   command: >
-    certbot --nginx certonly
-    --cert-name {{ item.cert_name }}
-    --cert-path {{ item.cert_path }}/fullchain.pem
-    --key-path {{ item.cert_path }}/privkey.pem
-  loop: "{{ cert_dirs }}"
+    echo -e "K\n1" | certbot --nginx certonly \
+                          --cert-name "{{ item.path | basename }}" \
+                          --cert-path "{{ item.path }}/fullchain.pem" \
+                          --key-path "{{ item.path }}/privkey.pem"
+  loop: "{{ cert_dirs.files }}"
   loop_control:
     loop_var: item
+  become: true
 
+# To test: sudo certbot --nginx renew --dry-run
 - name: set up cron job for certificate renewal
+  become: true
   cron:
-    name: "renew Let's Encrypt ssl certs"
+    name: "renew Lets Encrypt ssl certs"
     minute: "0"
     hour: "0"
     day: "*/2"  # Run every other day - only renews if cert 30 days old
-    job: "/usr/bin/certbot renew --quiet"
+    job: "/usr/local/bin/certbot --nginx renew --quiet"
 
-- name: restart Nginx to apply changes
+- name: restart nginx to apply changes
   service:
     name: nginx
     state: restarted

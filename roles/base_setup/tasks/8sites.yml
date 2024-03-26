@@ -1,4 +1,6 @@
 ---
+# NOTE: ssausage clone/setup/start manually
+# TODO: do a git pull on these if exist
 - name: clone site repositories
   git:
     repo: "{{ item.repo }}"
@@ -11,6 +13,20 @@
     - { repo: "https://github.com/radzhome/email_service.git", name: "email_service" }
   when: not is_directory|default(false)
 
+- name: update directories ownership
+  file:
+    path: "/var/web/{{ item }}"
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+  loop:
+    - dokuwiki
+    - ssausage
+    - wojciklaw.ca
+    - sandrako
+    - infinite_auto
+    - email_service
+
 - name: define list of nginx conf files
   set_fact:
     nginx_conf_files:
@@ -18,26 +34,51 @@
       - sandrako.conf
       - ssausage.conf
       - wojciklaw.conf
+      - dokuwiki.conf
+
+- name: copy nginx conf files
+  copy:
+    src: "files/nginx/{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item }}"
+  loop: "{{ nginx_conf_files }}"
 
 - name: define list of systemd conf files
   set_fact:
     systemd_conf_files:
       - ssausage.service
 
-- name: copy nginx conf files
-  copy:
-    src: "files/{{ item }}"
-    dest: "/etc/nginx/conf.d/{{ item }}"
-  loop: "{{ nginx_conf_files }}"
-
 # Not starting/restarting the service here
 - name: copy systemd service file(s)
   copy:
     src: "files/{{ item }}"
-    dest: "/etc/nginx/conf.d/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
   loop: "{{ systemd_conf_files }}"
 
+- name: reload systemd manager configuration
+  command: systemctl daemon-reload
+  become: yes
+
+# wont start if missing, installed manually (private repo)
+- name: set executable permission on ssausage/service.sh
+  become: true
+  file:
+    path: /var/web/ssausage/service.sh
+    mode: +x
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+  ignore_errors: yes
+
+# Wont start if ssausage is broken
 - name: restart nginx
   service:
     name: nginx
     state: restarted
+  ignore_errors: yes
+
+# wont start if missing, installed manually (private repo)
+- name: ensure ssausage service is running and starts on boot
+  service:
+    name: ssausage
+    state: restarted
+    enabled: yes
+  ignore_errors: yes

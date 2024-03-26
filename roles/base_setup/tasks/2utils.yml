@@ -2,26 +2,44 @@
 # install base utils packages
 ##
 ---
+# These below keep failing with (that was due to memory running out)
+# fatal: [appserver1]: FAILED! => {
+#    "changed": false,
+#    "module_stderr": "Shared connection to 3.208.71.54 closed.\r\n",
+#    "module_stdout": "Killed\r\n",
+#    "msg": "MODULE FAILURE\nSee stdout/stderr for the exact error",
+#    "rc": 137
+#}
+#
 - name: update package index
   apt:
     update_cache: yes
   become: true
+  run_once: true
+#  async: 300  # Set an appropriate timeout (in seconds) for the task
+#  poll: 10  # Poll continuously until the task is completed or fails
+
+- name: upgrade packages
+  apt:
+    upgrade: yes
+    autoclean: yes  # Optional: Remove any no longer required packages
+  become: yes
+  run_once: true
 
 - name: install utils packages
-  apt: pkg=ntp state=present update-cache=yes
+  apt: pkg={{ item }} state=present # update-cache=yes  # update cache takes too long, results in connection error
   with_items:
     - htop
     - wget
     - curl
-    - top
     - ntp
-    - dig
-    - nslookup
+    - dnsutils
     - git
   tags:
     - packages
+  run_once: true
 
-- name: install image libraries
+- name: install image libraries (ubuntu)
   apt: name={{ item }} state=present
   with_items:
     - libjpeg8-dev
@@ -32,5 +50,21 @@
     - libwebp-dev
     - libopenjp2-7-dev
     - libopenjp2-7-dev
+  tags:
+    - imaging
   run_once: true
 
+#- name: install image libraries (debian)
+#  apt:
+#    name: "{{ item }}"
+#    state: present
+#  loop:
+#    - libjpeg62-turbo-dev
+#    - zlib1g-dev
+#    - libtiff-dev
+#    - libfreetype6
+#    - libfreetype6-dev
+#    - libwebp-dev
+#    - libopenjp2-7-dev
+#    - libopenjp2-7-dev
+#  run_once: true

@@ -1,26 +1,23 @@
 ---
-- name: Create /var/web directory
+- name: create /var/web directory
   file:
     path: /var/web
     state: directory
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
 
-- name: Create /var/log directory
+- name: create /var/log directory
   file:
     path: /var/log
     state: directory
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
 
-- name: Create subdirectories inside /var/web
+
+- name: create /etc/letsencrypt/live/ directory
   file:
-    path: "/var/web/{{ item }}"
+    path: /etc/letsencrypt/live
     state: directory
-    owner: ubuntu
-    group: ubuntu
-  loop:
-    - dokuwiki
-    - supersausage
-    - wojciklaw
-    - sandrako
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+

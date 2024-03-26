@@ -10,10 +10,27 @@
 - name: install php-mbstring to make search fast
   action: apt name=php-mbstring state=present
 
-- name: Copy php-fpm-pool.conf to /etc/php/7.0/fpm/pool.d/ubuntu.conf
+# Check config sudo php-fpm8.1 -t
+# /var/log/php8.1-fpm.log to see logs
+- name: check PHP-FPM configuration
+  command: php-fpm8.1 -t
+  register: php_fpm_check
+  ignore_errors: yes
+
+# TODO: technically just clear out this directory
+# Move existing conf in ubuntu 22.04 to .old
+# Debian uses php 8.2
+- name: move www.conf to www.conf.old
+  command: mv /etc/php/8.1/fpm/pool.d/www.conf /etc/php/8.1/fpm/pool.d/www.conf.old
+  ignore_errors: yes
+  run_once: yes
+
+# 1 pool worker to launch
+- name: copy php-fpm-pool.conf to /etc/php/8.1/fpm/pool.d/ubuntu.conf
   copy:
     src: "files/php-fpm-pool.conf"
     dest: "/etc/php/8.1/fpm/pool.d/ubuntu.conf"
 
+# sudo service php8.1-fpm restart
 - name: service php8.1-fpm
-  action: service name=php8.1-fpm state=restarted
+  action: service name=php8.1-fpm state=restarted enabled=yes

@@ -8,16 +8,18 @@
     name: ['nginx', 'php-fpm', 'php-xml', 'php-gd', 'tar']
     state: present
 
+- name: create /var/web/dokuwiki dir
+  file:
+    path: /var/web/dokuwiki
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+
 - name: download DokuWiki
   get_url:
     url: https://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz
     dest: /tmp/dokuwiki.tgz
 
-#- name: extract DokuWiki archive
-#  unarchive:
-#    src: /tmp/dokuwiki.tgz
-#    dest: /var/web/
-#    remote_src: yes
 - name: extract DokuWiki archive
   unarchive:
     src: /tmp/dokuwiki.tgz
@@ -28,16 +30,17 @@
 - name: change ownership of DokuWiki files
   file:
     path: /var/web/dokuwiki
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
     recurse: yes
 
+# also done in 8sites.yml
 - name: copy dokuwiki nginx conf
   copy:
-    src: "files/dokuwiki.conf"
+    src: "files/nginx/dokuwiki.conf"
     dest: "/etc/nginx/conf.d/dokuwiki.conf"
 
-- name: restart Nginx
+- name: restart nginx
   service:
     name: nginx
     state: restarted

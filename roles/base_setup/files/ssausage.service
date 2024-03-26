@@ -5,7 +5,7 @@ After=multi-user.target
 [Service]
 Type=idle
 User=ubuntu
-ExecStart=/var/web/supersausage/deli_cms/service.sh
+ExecStart=/var/web/ssausage/service.sh
 Restart=always
 TimeoutStartSec=10
 RestartSec=10

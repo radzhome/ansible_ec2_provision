@@ -1,38 +1,40 @@
 ---
-- name: install python2 for old sites
-  apt:
-    name: python2
-    state: present
-    update_cache: yes
+#- name: install python2 for old sites
+#  apt:
+#    name: python2
+#    state: present
+#    update_cache: yes
 
-- name: download get-pip.py for Python 2
-  become: true
-  get_url:
-    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-    dest: /tmp/get-pip.py
+#- name: download get-pip.py for Python 2
+#  become: true
+#  get_url:
+#    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+#    dest: /tmp/get-pip.py
 
-- name: install pip for Python 2
-  become: true
-  command: "python2 /tmp/get-pip.py"
+#- name: install pip for Python 2
+#  become: true
+#  command: "python2 /tmp/get-pip.py"
 
-# For some reason pip3 keeps breaking (uninstall + reinstall works)
-- name: uninstall python3-pip
-  become: true
-  apt:
-    name: python3-pip
-    state: absent
-
-- name: reinstall python3-pip
-  become: true
-  apt:
-    name: python3-pip
-    state: present
+## For some reason pip3 keeps breaking (uninstall + reinstall works)
+#- name: uninstall python3-pip
+#  become: true
+#  apt:
+#    name: python3-pip
+#    state: absent
+#
+#- name: reinstall python3-pip
+#  become: true
+#  apt:
+#    name: python3-pip
+#    state: present
 
 - name: install py libraries
   apt: name={{ item }} state=present
+  become: true
+  become_user: root
   with_items:
-#    - python3-pip  # Can't have both pip2 and pip3 looks like
-#    - virtualenv
+    - python3-pip  # Can't have both pip2 and pip3 looks like
+    - virtualenv
 #    - python-pip  # Py2 pip for virtualenv old sites - use: sudo python2 get-pip.py
     - build-essential
   register: install_result
@@ -66,8 +68,8 @@
 #      #- virtualenv
 #    executable: pip3
 
-- name: install py libs py2
-  pip:
-    name:
-      - virtualenv
-    executable: pip2
+#- name: install py libs py2
+#  pip:
+#    name:
+#      - virtualenv
+#    executable: pip2

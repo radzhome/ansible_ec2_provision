@@ -6,3 +6,4 @@
 - include_tasks: 5python_tools.yml
 - include_tasks: 6certbot.yml
 - include_tasks: 7dokuwiki.yml
+- include_tasks: 8sites.yml

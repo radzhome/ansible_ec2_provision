@@ -1,7 +1,7 @@
 ---
 - hosts: appservers
   gather_facts: True
-  user: ubuntu
+  user: "{{ ansible_ssh_user }}"
   sudo: True
   tasks:
 
@@ -11,7 +11,7 @@
 
     - name: Conditional
       action: debug msg="This instance is a {{ ansible_ec2_instance_type }}, id {{ ansible_ec2_instance_id }}"
-      when: ansible_ec2_instance_type == "t2.nano"
+#      when: ansible_ec2_instance_type == "t2.nano"
 
     # just show the instance-id
     #- debug: msg= "{{ hostvars[inventory_hostname]['ansible_ec2_instance_id'] }}"
