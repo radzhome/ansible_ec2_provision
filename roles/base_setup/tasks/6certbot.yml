@@ -22,20 +22,6 @@
 # basename extracts the last part of the path (the domain name)
 # i.e.
 # certbot --nginx certonly --cert-name sandrako.ca  --cert-path /etc/letsencrypt/live/sandrako.ca/fullchain.pem --key-path /etc/letsencrypt/live/sandrako.ca/privkey.pem
-#- name: configure certbot with existing certificates
-#  become: true
-#  expect:
-#    command: >
-#      certbot --nginx certonly
-#      --cert-name {{ item.path | basename }}
-#      --cert-path {{ item.path }}/fullchain.pem
-#      --key-path {{ item.path }}/privkey.pem
-#    responses:
-#      "(U)pdate key type/(K)eep existing key type": "K\n"  # Provide the response to the question
-#      "1: Keep the existing certificate for now": "1\n"      # Response to the second question
-#  loop: "{{ cert_dirs.files }}"
-#  loop_control:
-#    loop_var: item
 - name: configure certbot with existing certificates
   command: >
     echo -e "K\n1" | certbot --nginx certonly \
